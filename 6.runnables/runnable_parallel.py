@@ -1,6 +1,6 @@
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableParallel, RunnableSequence
+from langchain_core.runnables import RunnableParallel, RunnableSequence,RunnablePassthrough
 
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -23,10 +23,16 @@ prompt2 = PromptTemplate(
 
 
 
-parallel_chain = RunnableParallel({
-    'tweet' : RunnableSequence(prompt1, model, parser),
-    'linkedin': prompt2 | model | parser
-})
+# parallel_chain = RunnableParallel({
+#     'tweet' : RunnableSequence(prompt1, model, parser),
+#     'linkedin': prompt2 | model | parser
+# })
+
+
+parallel_chain = RunnablePassthrough() | {
+    "tweet": prompt1 | model | parser,
+    "linkedin": prompt2 | model | parser
+}
 
 result = parallel_chain.invoke({'topic':'when AGI will kill human?'})
 
