@@ -30,3 +30,4 @@ grandalf
 langchain_community
 
 pypdf
+langchain_experimental
